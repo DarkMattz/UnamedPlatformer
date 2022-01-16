@@ -1,0 +1,55 @@
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using UnityEngine;
+
+public class PlayerBehavior : MonoBehaviour
+{
+    [SerializeField] private float jumpHeight = 1800;
+    [SerializeField] private float gravity = 15;
+    [SerializeField] private float horizontalSpeed = 10;
+    [SerializeField] private int[] totalJump = {2,2};
+    [SerializeField] private bool mouseVisibility = false;
+    private float movHorizontal, movVertical;
+    private bool isJump;
+    private bool isGrounded;
+    private Rigidbody2D playerBody;
+    private LayerMask layerMask;
+    private Transform groundCheck;
+
+    private void Start()
+    {
+        playerBody = GetComponent<Rigidbody2D>();
+        playerBody.gravityScale = gravity;
+    }
+
+    private void Update()
+    {
+        Cursor.visible = mouseVisibility;
+
+        //Get all input
+        movHorizontal = Input.GetAxisRaw("Horizontal");
+        movVertical = Input.GetAxis("Vertical");
+        if(Input.GetKeyDown(KeyCode.Space))
+            isJump = true;
+        isGrounded = checkGround();
+    }
+
+    private void FixedUpdate()
+    {
+        if (isJump && isGrounded && (totalJump[0]-- > 0))
+        {
+            playerBody.velocity.y = 0;
+            playerBody.AddForce(new Vector2(0, jumpHeight));
+            isJump = false;
+        }
+
+        playerBody.velocity = new Vector2(movHorizontal * horizontalSpeed, playerBody.velocity.y);
+    }
+
+    private bool checkGround()
+    {
+        totalJump[0] = totalJump[1];
+        return true;
+    }
+}

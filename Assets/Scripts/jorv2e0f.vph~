@@ -1,0 +1,69 @@
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using UnityEngine;
+
+public class PlayerBehavior : MonoBehaviour
+{
+    [SerializeField] private float jumpHeight = 1800;
+    [SerializeField] private float gravity = 15;
+    [SerializeField] private float horizontalSpeed = 10;
+    [SerializeField] private int[] totalJump = {2,2};
+    [SerializeField] private bool mouseVisibility = false;
+    [SerializeField] private float groundCheckExtention = 0;
+    private float movHorizontal, movVertical;
+    private bool isJump;
+    private bool isGrounded;
+    private Rigidbody2D playerBody;
+    private Collider2D collider;
+    private LayerMask layerMask;
+    private Transform groundCheck;
+
+    private void Start()
+    {
+        collider = GetComponent<CapsuleCollider2D>();
+        playerBody = GetComponent<Rigidbody2D>();
+        playerBody.gravityScale = gravity;
+    }
+
+    private void Update()
+    {
+        Cursor.visible = mouseVisibility;
+
+        //Get all input
+        movHorizontal = Input.GetAxisRaw("Horizontal");
+        movVertical = Input.GetAxis("Vertical");
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isJump = true;
+        }
+        isGrounded = checkGround();
+    }
+
+    private void FixedUpdate()
+    {
+        if (isJump && isGrounded && (totalJump[0] > 0))
+        {
+            playerBody.velocity = new Vector2(playerBody.velocity.x, 0);
+            playerBody.AddForce(new Vector2(0, jumpHeight));
+            totalJump[0]--;
+            isJump = false;
+        }
+
+        playerBody.velocity = new Vector2(movHorizontal * horizontalSpeed, playerBody.velocity.y);
+    }
+
+    private bool checkGround()
+    {
+        RaycastHit2D raycast =  Physics2D.Raycast(collider.bounds.center, Vector2.down, collider.bounds.extents.y + groundCheckExtention);
+        Color rayColor;
+        if(raycast.collider)
+        Debug.DrawRay(collider.bounds.center, Vector2.down * ( collider.bounds.extents.y + groundCheckExtention));
+        return true;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Console.WriteLine(collision.GetContact(0).point);
+    }
+}

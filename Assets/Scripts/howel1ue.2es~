@@ -1,0 +1,35 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraBehavior : MonoBehaviour
+{
+
+    [SerializeField] private Transform targetObject;
+    [SerializeField] private int offset = -10;
+    [SerializeField] private Vector2 screenSize;
+    [SerializeField] private int[] screenDeadZonePercentage = new int[2];
+    [SerializeField] private float speed = 5f;
+    private Vector3 cameraVelocity;
+    private Camera mainCamera;
+
+
+    private void Start()
+    {
+        screenDeadZonePercentage[0] = 50;
+        targetObject = GameObject.Find("Player").transform;
+        mainCamera = GetComponent<Camera>();
+        screenSize = mainCamera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+    }
+
+
+    private void LateUpdate()
+    {
+        float screenDeadZoneX = ((screenSize.x * screenDeadZonePercentage[0]) / 100);
+        cameraVelocity = Vector3.zero;
+        if (targetObject.position.x > transform.position.x + screenDeadZoneX || targetObject.position.x < transform.position.x - screenDeadZoneX)
+        {
+            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(targetObject.position.x, transform.position.y, -10), ref cameraVelocity, Time.deltaTime) ;
+        }
+    }
+}
