@@ -18,13 +18,18 @@ public class WeaponBehavior : MonoBehaviour
     [SerializeField] private float[] lockAngles;
     [SerializeField] private float usedAngle;
     [SerializeField] private float maximumSwordRadius;
+    [SerializeField] private Boolean unlockSword;
+    private Vector2 spriteRendererBound;
     private Transform playerTransform;
     private Rigidbody2D weaponBody;
     private Rigidbody2D playerBody;
+    private Vector2 screenBound;
 
     // Start is called before the first frame update
     private void Start()
     {
+        spriteRendererBound = (transform.GetChild(0).GetComponent<SpriteRenderer>().bounds.size);
+        screenBound = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         playerTransform = GameObject.Find("Player").transform;
         playerBody = GameObject.Find("Player").GetComponent<Rigidbody2D>();
         weaponBody = GetComponent<Rigidbody2D>();
@@ -54,12 +59,28 @@ public class WeaponBehavior : MonoBehaviour
 
             //Change sword velocity
             weaponBody.velocity = Vector2.Lerp(weaponBody.velocity, (new Vector2(movement.x, movement.y) * movementSpeed) + playerBody.velocity, Time.fixedDeltaTime);
-            transform.position = Vector2.ClampMagnitude((Vector2)transform.position - (Vector2)playerTransform.position, maximumSwordRadius) + (Vector2)playerTransform.position;
+            //transform.position = Vector2.ClampMagnitude((Vector2)transform.position - (Vector2)playerTransform.position, maximumSwordRadius) + (Vector2)playerTransform.position;
         }
         else //Stop sword if no cursor movement detected
         {
             weaponBody.velocity = Vector2.Lerp(weaponBody.velocity, Vector2.zero + playerBody.velocity, Time.fixedDeltaTime * stopSpeed);
         }
+
+    }
+
+    private void LateUpdate()
+    {
+        //Sword Clamping
+        Vector3 newTransformPos = transform.position;
+        if (unlockSword)
+        {
+            newTransformPos.x = Mathf.Clamp(transform.position.x, ((screenBound.x * -1 - spriteRendererBound.x) + Camera.main.transform.position.x), ((screenBound.x + spriteRendererBound.x) + Camera.main.transform.position.x));
+            newTransformPos.y = Mathf.Clamp(transform.position.y, ((screenBound.y * -1 - spriteRendererBound.y) + Camera.main.transform.position.y), ((screenBound.y + spriteRendererBound.y) + Camera.main.transform.position.y));
+        } else
+        {
+            newTransformPos =  Vector2.ClampMagnitude(newTransformPos - playerTransform.position, maximumSwordRadius) + (Vector2)playerTransform.position;
+        }
+        transform.position = newTransformPos;
     }
 
     private void rotateSword()
@@ -78,5 +99,15 @@ public class WeaponBehavior : MonoBehaviour
         //Rotate sword
         Quaternion rotation = Quaternion.AngleAxis(usedAngle, Vector3.forward);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.fixedDeltaTime * rotationSpeed);
+    }
+
+
+    void OnTriggerEnter2D(Collider2D otherObject) 
+    {
+        if (otherObject.CompareTag("Enemy") == true) 
+        {
+            Physics2D.IgnoreCollision(playerTransform.GetComponent<Collider2D>(), otherObject.GetComponent<Collider2D>());
+            otherObject.gameObject.SendMessage("ApplyDamage", 1);
+        }
     }
 }
