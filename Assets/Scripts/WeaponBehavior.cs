@@ -19,6 +19,7 @@ public class WeaponBehavior : MonoBehaviour
     [SerializeField] private float usedAngle;
     [SerializeField] private float maximumSwordRadius;
     [SerializeField] private Boolean unlockSword;
+    [SerializeField] private float velocityToHitEnemy;
     private Vector2 spriteRendererBound;
     private Transform playerTransform;
     private Rigidbody2D weaponBody;
@@ -26,7 +27,7 @@ public class WeaponBehavior : MonoBehaviour
     private Vector2 screenBound;
 
     // Start is called before the first frame update
-    private void Start()
+    private void Awake()
     {
         spriteRendererBound = (transform.GetChild(0).GetComponent<SpriteRenderer>().bounds.size);
         screenBound = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
@@ -39,12 +40,11 @@ public class WeaponBehavior : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        /*
-         *  Get cursor movement
-         */
+        //Cursor movement
         movement.x = Input.GetAxis("Mouse X");
         movement.y = Input.GetAxis("Mouse Y");
-
+        
+        
     }
 
     private void FixedUpdate()
@@ -59,7 +59,6 @@ public class WeaponBehavior : MonoBehaviour
 
             //Change sword velocity
             weaponBody.velocity = Vector2.Lerp(weaponBody.velocity, (new Vector2(movement.x, movement.y) * movementSpeed) + playerBody.velocity, Time.fixedDeltaTime);
-            //transform.position = Vector2.ClampMagnitude((Vector2)transform.position - (Vector2)playerTransform.position, maximumSwordRadius) + (Vector2)playerTransform.position;
         }
         else //Stop sword if no cursor movement detected
         {
@@ -104,9 +103,8 @@ public class WeaponBehavior : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D otherObject) 
     {
-        if (otherObject.CompareTag("Enemy") == true) 
+        if (otherObject.CompareTag("Enemy") == true && weaponBody.velocity.magnitude > velocityToHitEnemy) 
         {
-            Physics2D.IgnoreCollision(playerTransform.GetComponent<Collider2D>(), otherObject.GetComponent<Collider2D>());
             otherObject.gameObject.SendMessage("ApplyDamage", 1);
         }
     }

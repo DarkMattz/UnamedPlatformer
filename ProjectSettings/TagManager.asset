@@ -7,17 +7,18 @@ TagManager:
   - Sword
   - Enemy
   - StationaryEnemy
+  - Terrain
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Platform
+  - Terrain
   - Water
   - UI
   - Sword
   - Enemy
-  - 
-  - 
+  - Skybox
+  - Camera
   - 
   - 
   - 
