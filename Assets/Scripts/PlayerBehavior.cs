@@ -105,6 +105,7 @@ public class PlayerBehavior : MonoBehaviour
     private void checkGround()
     {
         bool boxCastChecking = Physics2D.BoxCast(playerCollider.bounds.center, playerCollider.bounds.size, 0, Vector2.down, groundCheckExtention, layerMask);
+        //Physics.BoxCast(playerCollider.bounds.center, transform.localScale, transform.forward, out m_Hit, transform.rotation, m_MaxDistance);
         if (boxCastChecking)
         {
             animator.SetBool("isJump", false);
@@ -116,11 +117,23 @@ public class PlayerBehavior : MonoBehaviour
             animator.SetBool("isJump", true);
             isGrounded = false;
         }
+        Gizmos.color = Color.red;
+
+        //Check if there has been a hit yet
+        //if (boxCastChecking)
+        //{
+        //    Gizmos.DrawRay(transform.position, transform.forward * m_Hit.distance);
+        //    Gizmos.DrawWireCube(transform.position + transform.forward * m_Hit.distance, transform.localScale);
+        //}
+        //else
+        //{
+        //    Gizmos.DrawRay(transform.position, transform.forward * m_MaxDistance);
+        //    Gizmos.DrawWireCube(transform.position + transform.forward * m_MaxDistance, transform.localScale);
+        //}
     }
 
     void ApplyDamage(int damage) 
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
 }

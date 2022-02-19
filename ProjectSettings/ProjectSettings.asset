@@ -12,11 +12,11 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: Unamed Platformer
+  companyName: BGDC
+  productName: Unwilling
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
+  m_SplashScreenBackgroundColor: {r: 0.5803922, g: 0.5411765, b: 0.41176474, a: 1}
   m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 0
   m_SplashScreenOverlayOpacity: 1
@@ -40,6 +40,8 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos:
+  - logo: {fileID: 21300000, guid: cd2f10200aa52d043b6f9e36d4de52cd, type: 3}
+    duration: 2
   - logo: {fileID: 21300000, guid: 410ff4cf2fc7e6b45aeff80c9091f679, type: 3}
     duration: 2
   m_VirtualRealitySplashScreen: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
@@ -136,7 +138,7 @@ PlayerSettings:
     16:10: 0
     16:9: 1
     Others: 0
-  bundleVersion: 1.0
+  bundleVersion: Alpha
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -272,7 +274,7 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+      m_Icon: {fileID: 2800000, guid: c95a1d48bd8cb6c4eb4b7201cd37f70b, type: 3}
       m_Width: 1024
       m_Height: 1024
       m_Kind: 0
@@ -310,6 +312,13 @@ PlayerSettings:
       m_Icon: {fileID: 0}
       m_Width: 16
       m_Height: 16
+      m_Kind: 0
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 2800000, guid: c95a1d48bd8cb6c4eb4b7201cd37f70b, type: 3}
+      m_Width: 128
+      m_Height: 128
       m_Kind: 0
   m_BuildTargetPlatformIcons: []
   m_BuildTargetBatching: []
