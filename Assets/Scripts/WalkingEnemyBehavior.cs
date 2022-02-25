@@ -10,6 +10,8 @@ public class WalkingEnemyBehavior : MonoBehaviour
     [SerializeField] Transform enemyParticle;
     [SerializeField] float knockbackEffect;
     [SerializeField] float knockbackTime;
+    private AudioLevel audioLevel;
+    private AudioSource hitSound;
     private float stopTime;
     private bool onDamage;
     private Animator animator;
@@ -32,6 +34,13 @@ public class WalkingEnemyBehavior : MonoBehaviour
         spriteTransform = transform.GetChild(0);
         spriteAnimator = spriteTransform.GetComponent<Animator>();
         spriteRenderer = spriteTransform.GetComponent<SpriteRenderer>();
+        hitSound = transform.GetChild(3).GetComponent<AudioSource>();
+        audioLevel = AudioLevel.getInstance();
+    }
+
+    private void Start()
+    {
+        hitSound.volume = audioLevel.getSfxLevel();
     }
 
     void Update()
@@ -52,11 +61,13 @@ public class WalkingEnemyBehavior : MonoBehaviour
         {
             if (spriteRenderer.flipX)
             {
-                enemyBody.AddForce(new Vector2(-knockbackEffect, 0), ForceMode2D.Impulse);
+                //enemyBody.AddForce(new Vector2(-knockbackEffect, 0), ForceMode2D.Impulse);
+                enemyBody.velocity = new Vector2(-knockbackEffect, enemyBody.velocity.y + 1);
             }
             else
             {
-                enemyBody.AddForce(new Vector2(knockbackEffect, 0), ForceMode2D.Impulse);
+                //enemyBody.AddForce(new Vector2(knockbackEffect, 0), ForceMode2D.Impulse);
+                enemyBody.velocity = new Vector2(knockbackEffect, enemyBody.velocity.y + 1);
             }
             if (Time.fixedTime - (stopTime + knockbackTime) > 0) 
             { 
@@ -106,6 +117,7 @@ public class WalkingEnemyBehavior : MonoBehaviour
 
     void ApplyDamage(int damage)
     {
+        hitSound.Play();
         stopTime = Time.fixedTime;
         onDamage = true;
         enemyBody.velocity = Vector2.zero;

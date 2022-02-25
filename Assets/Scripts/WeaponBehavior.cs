@@ -34,6 +34,10 @@ public class WeaponBehavior : MonoBehaviour
         playerTransform = GameObject.Find("Player").transform;
         playerBody = GameObject.Find("Player").GetComponent<Rigidbody2D>();
         weaponBody = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
